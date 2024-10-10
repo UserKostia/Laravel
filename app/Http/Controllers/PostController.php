@@ -38,4 +38,10 @@ class PostController extends Controller
         $post->update($request->only(['title', 'content']));
         return redirect()->route('posts.index');
     }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        return redirect()->route('posts.index');
+    }
 }
