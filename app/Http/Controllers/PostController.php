@@ -27,4 +27,15 @@ class PostController extends Controller
         $posts = Post::all();
         return view('posts.index', compact('posts'));
     }
+
+    public function update(Request $request, Post $post)
+    {
+        $request->validate([
+            'title' => 'required',
+            'content' => 'required',
+        ]);
+
+        $post->update($request->only(['title', 'content']));
+        return redirect()->route('posts.index');
+    }
 }
