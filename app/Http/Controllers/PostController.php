@@ -21,4 +21,10 @@ class PostController extends Controller
 
         return redirect()->route('posts.index');
     }
+
+    public function index()
+    {
+        $posts = Post::all();
+        return view('posts.index', compact('posts'));
+    }
 }
