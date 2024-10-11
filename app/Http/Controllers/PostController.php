@@ -13,13 +13,13 @@ class PostController extends Controller
             'title' => 'required',
             'content' => 'required',
         ]);
-
+    
         Post::create([
             'title' => $request->title,
             'content' => $request->content,
-            'user_id' => auth()->id(),
+            'user_id' => auth()->check() ? auth()->id() : 1,
         ]);
-
+    
         return redirect()->route('posts.index');
     }
 
