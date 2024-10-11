@@ -6,39 +6,38 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 
 class PostController extends Controller
-{
+{    
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required',
             'content' => 'required',
         ]);
-    
+
         Post::create([
             'title' => $request->title,
             'content' => $request->content,
             'user_id' => auth()->check() ? auth()->id() : 1,
         ]);
-    
+
         return redirect()->route('posts.index');
     }
-
+    
     public function create()
     {
-        return view('create');
+        return view('posts.create');
     }
 
     public function edit($id)
     {
         $post = Post::find($id);
-        $send = [$id, $post];
-        return view('edit', compact('send'));
+        return view('posts.edit', compact('post'));
     }
 
     public function index()
     {
         $posts = Post::all();
-        return view('index', compact('posts'));
+        return view('posts.index', compact('posts'));
     }
 
     public function update(Request $request, int $id)
@@ -63,7 +62,11 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::with('comments')->find($id);
-        $send = [$id, $post];
-        return view('show', compact('send'));
-    }
+    
+        if (!$post) {
+            return redirect()->route('posts.index')->with('error', 'Post not found.');
+        }
+    
+        return view('posts.show', compact('post'));
+    }    
 }

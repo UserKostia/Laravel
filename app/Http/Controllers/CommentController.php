@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use App\Models\Post;
 
 class CommentController extends Controller
 {
@@ -17,26 +18,31 @@ class CommentController extends Controller
     {
         $request->validate([
             'content' => 'required',
+            'post_id' => 'required|exists:posts,id'
         ]);
 
         Comment::create([
             'content' => $request->content,
-            'user_id' => auth()->id(),
+            'body' => $request->content, // Переконайся, що це присутнє
+            'user_id' => auth()->check() ? auth()->id() : 1,
             'post_id' => $request->post_id,
         ]);
 
-        return redirect()->back();
+        return redirect()->route('comments.index');
     }
+
 
     public function create()
     {
-        return view('comments.create');
+        $posts = Post::all();
+        return view('comments.create', compact('posts'));
     }
-
+    
     public function edit($id)
     {
         $comment = Comment::find($id);
-        return view('comments.edit', compact('comment'));
+        $post = Post::find($comment->post_id);
+        return view('comments.edit', compact('comment', 'post'));
     }
 
     public function update(Request $request, $id)
@@ -62,6 +68,10 @@ class CommentController extends Controller
     public function show($id)
     {
         $comment = Comment::with('post')->find($id);
+        if (!$comment) {
+            return redirect()->route('comments.index')->with('error', 'Comment not found.');
+        }
+    
         return view('comments.show', compact('comment'));
     }
 }
