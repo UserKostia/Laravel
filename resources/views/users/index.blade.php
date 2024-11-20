@@ -1,4 +1,3 @@
-<!-- resources/views/users/index.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +6,24 @@
     <title>Users List</title>
     <!-- Include Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: center; /* Центрування кнопок */
+            margin-bottom: 20px; /* Відступ знизу */
+        }
+        .button {
+            margin: 0 10px; /* Відступи між кнопками */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
+        <div class="button-container">
+            <a href="{{ route('posts.index') }}" class="btn btn-secondary">View Posts</a>
+            <a href="{{ route('comments.index') }}" class="btn btn-secondary">View Comments</a>
+        </div>
+
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <h1 class="mb-4">Users List</h1>
